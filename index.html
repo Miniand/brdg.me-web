@@ -1,0 +1,127 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>test</title>
+</head>
+<body>
+
+
+
+   
+<form onsubmit="authFormSubmit();return false;">
+    <div>
+        <label>Email: <input id="email" /></label>
+    </div>
+    <div id="confirmationContainer" style="display:none;">
+        <label>Confirmation: <input id="confirmation" /></label>
+    </div>
+    <div>
+        <input type="submit" value="Log in" />
+    </div>
+</form>
+	
+	<div id="gamedata"></div>
+     <script>
+    $(window).load(function() {
+        var token = localStorage.getItem("token");
+        if (token != null){
+            getGames(token);
+        }
+    });
+
+
+    function authFormSubmit() {
+        var email = $('#email').val().trim();
+        var confirmation = $('#confirmation').val().trim();
+        if (email === '') {
+            alert('Please enter an email address');
+        } else if (confirmation === '') {
+            $.ajax('http://brdg.me/auth/request', {
+                type: 'POST',
+                data: {
+                    email: email
+                },
+                success: function() {
+                    $('#confirmationContainer').show();
+                    alert('Please check your email for a confirmation code.');
+                },
+                error: function() {
+                    alert('Unable to request auth, please ensure you have entered a valid email address.');
+                }
+            });
+        } else {
+            $.ajax('http://brdg.me/auth/confirm', {
+                type: 'POST',
+                data: {
+                    email: email,
+                    confirmation: confirmation
+                },
+                success: function(data) {
+                    alert('You logged in and your token is ' + data);
+                    localStorage.setItem("token", data);
+                     localStorage.setItem("email", email);              
+                    getGames(data);
+
+                 },
+                error: function() {
+                    alert('Unable to confirm, please check the email and confirmation code is correct.');
+                }
+            });
+        }
+    }
+    function getGames(token){
+        strAuth="token "+token
+         $.ajax('http://brdg.me/game', {
+
+        headers: {
+            Authorization: strAuth
+        },
+
+        success: function (data) {
+
+        //alert("Request worked, open your JS console to see the data.");
+
+            console.log(data);
+
+        //alert(data.games[0].identifier);
+
+            var text = "";
+
+            for (i = 0; i < data.games.length; i = i + 1) {
+
+                                            
+                text += "<a href=\"game.html?id=" + data.games[i].id + "&mail=" + $('#email').val().trim() + "&token=" +  token +"\">" + data.games[i].identifier + "</a> with ";
+
+                for (n = 0; n < data.games[i].playerList.length; n = n + 1){
+                    if (n==(data.games[i].playerList.length-1)){
+                        text+= data.games[i].playerList[n];
+                    }
+                    else
+                    {
+                       text+= data.games[i].playerList[n]+" and "; 
+                    }
+                    
+
+                }
+
+                text += "<br>"; 
+
+            } 
+            document.getElementById("gamedata").innerHTML = text; 
+        } 
+    });
+
+    }
+
+    </script>
+
+
+</body>
+
+</html>
+
+
+   
+
