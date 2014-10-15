@@ -74,13 +74,16 @@ history:
 				}
 			});
 			getGames(QueryString.token);
+
 	var server = "brdg.me";
 	var user = QueryString.mail;
 	var exampleSocket = new WebSocket("ws://"+server+"/ws");
 	exampleSocket.onopen = function(event) {
     // Authenticate
     console.log('Connected, authenticating');
-    exampleSocket.send(JSON.stringify(user));
+    console.log(QueryString.token);
+    
+    exampleSocket.send(JSON.stringify(QueryString.token));
 	};
 	exampleSocket.onmessage = function(event) {
     // We were sent a game update
