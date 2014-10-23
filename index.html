@@ -75,8 +75,12 @@ Your turn:<br />
                     alert('You logged in and your token is ' + data);
                     localStorage.setItem("token", data);
                     localStorage.setItem("email", email);              
-            $('#gamedata').html(getGames(data, "my_turn"));
-            $('#allgamedata').html(getGames(data, "active"));
+					getGames(data, "my_turn", function(text) {
+						$('#gamedata').html(text);
+					});
+					getGames(data, "active", function(text) {
+						$('#allgamedata').html(text);
+					});
 
                  },
                 error: function() {
@@ -85,7 +89,7 @@ Your turn:<br />
             });
         }
     }
-    function getGames(token, state){
+    function getGames(token, state, cb){
         strAuth="token "+token
          $.ajax('http://brdg.me/game', {
 
@@ -124,7 +128,7 @@ Your turn:<br />
 
             }
             console.log(text);
-            return text; 
+			cb(text);
 
         } 
     });
