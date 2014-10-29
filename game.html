@@ -66,12 +66,14 @@ white-space:pre-wrap
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br /><form onsubmit=\"sendCommand();return false;\"> Command: <input type=\"text\" name=\"comm\" id=\"comm\"><br><input type=\"Submit\"></form>";
+					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br /><form onsubmit=\"sendCommand();return false;\"> Command: <input type=\"text\" name=\"comm\" id=\"comm\" autofocus><br><input type=\"Submit\"></form>";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
 					document.getElementById("historydata").innerHTML = history;	
 					var objDiv = document.getElementById("historydata");
-					objDiv.scrollTop = objDiv.scrollHeight;				
+					objDiv.scrollTop = objDiv.scrollHeight;	
+					$('#comm').focus();		
+
 				}
 			});
 			getGames(token);
@@ -107,12 +109,13 @@ white-space:pre-wrap
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br /><form onsubmit=\"sendCommand();return false;\"> Command: <input type=\"text\" name=\"comm\" id=\"comm\"><br><input type=\"Submit\"></form>";
+					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br /><form onsubmit=\"sendCommand();return false;\"> Command: <input type=\"text\" name=\"comm\" id=\"comm\" autofocus><br><input type=\"Submit\"></form>";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
 					document.getElementById("historydata").innerHTML = history;	
 					var objDiv = document.getElementById("historydata");
-					objDiv.scrollTop = objDiv.scrollHeight;			
+					objDiv.scrollTop = objDiv.scrollHeight;		
+					$('#comm').focus();	
 				}
 			});
 	};
