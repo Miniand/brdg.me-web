@@ -1,6 +1,8 @@
 <!DOCTYPE html> 
 <html lang="en">
 <head>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
 <style>
 body {
 font-size:13px;
@@ -9,9 +11,9 @@ font-family:monospace,Segoe UI Symbol;
 white-space:pre-wrap
 
 }
- td {
-   border: 1px solid black;
-   vertical-align:top;
+#historydata{
+	max-height:700px;
+    overflow:auto;
 }
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -19,26 +21,23 @@ white-space:pre-wrap
     <title>brdg.me web client</title>
 </head>
 <body>
-<table >
-<tr>
-<td>
-	<div id="gamedata"></div>
-	<form onsubmit="sendCommand();return false;">
-	Command: <input type="text" name="comm" id="comm"><br>
-	<input type="Submit">
-	</form>
-	</td>
-	<td>
-history:
-	<div id="historydata" style="height 100px; overflow-y:scroll;"></div>
-	</td>
-	<td>
-	othergames:
-<div id="gamelist" style="height 100px; overflow-y:scroll;"></div>
-	</td>
-	</tr>
-	</table>
+<div class="pure-g">
+	<div class="pure-u-1 pure-u-md-12-24" id="gamedata"></div>
+
+	<div class="pure-u-1 pure-u-md-8-24" id="historydata"></div>
+
+	<div class="pure-u-1 pure-u-md-4-24" id="gamelist"></div>
+
     <script>
+    var token = localStorage.getItem("token");
+    $(window).load(function() {
+        //var token = localStorage.getItem("token");
+        if (token == null){
+			window.location.replace("http://baconheist.com/brdgme");
+        }
+
+    });
+
 		var QueryString = function () {
 			var query_string = {};
 			var query = window.location.search.substring(1);
@@ -57,23 +56,25 @@ history:
 		return query_string;
 		} ();
 		//alert (QueryString.id);				  
-		var strAuth = "token "+QueryString.mail;
+		//var strAuth = "token "+QueryString.mail;
 		$.ajax('http://brdg.me/game/'+QueryString.id, {
 				headers: {
-					Authorization: 'token '+QueryString.token
+					Authorization: 'token '+token
 				},
 				success: function(data) {
 					//alert("Request worked, open your JS console to see the data.");
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre>";
+					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br /><form onsubmit=\"sendCommand();return false;\"> Command: <input type=\"text\" name=\"comm\" id=\"comm\"><br><input type=\"Submit\"></form>";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
-					document.getElementById("historydata").innerHTML = history;					
+					document.getElementById("historydata").innerHTML = history;	
+					var objDiv = document.getElementById("historydata");
+					objDiv.scrollTop = objDiv.scrollHeight;				
 				}
 			});
-			getGames(QueryString.token);
+			getGames(token);
 
 	var server = "brdg.me";
 	var user = QueryString.mail;
@@ -81,9 +82,9 @@ history:
 	exampleSocket.onopen = function(event) {
     // Authenticate
     console.log('Connected, authenticating');
-    console.log(QueryString.token);
+    console.log(token);
     
-    exampleSocket.send(JSON.stringify(QueryString.token));
+    exampleSocket.send(JSON.stringify(token));
 	};
 	exampleSocket.onmessage = function(event) {
     // We were sent a game update
@@ -98,7 +99,7 @@ history:
     	console.log(JSON.parse(event.data));
     	$.ajax('http://brdg.me/game/'+QueryString.id, {
 				headers: {
-					Authorization: 'token '+QueryString.token
+					Authorization: 'token '+token
 				},
 				success: function(data) {
 					console.log("ajax success after websocket event");
@@ -106,14 +107,16 @@ history:
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre>";
+					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br /><form onsubmit=\"sendCommand();return false;\"> Command: <input type=\"text\" name=\"comm\" id=\"comm\"><br><input type=\"Submit\"></form>";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
-					document.getElementById("historydata").innerHTML = history;			
+					document.getElementById("historydata").innerHTML = history;	
+					var objDiv = document.getElementById("historydata");
+					objDiv.scrollTop = objDiv.scrollHeight;			
 				}
 			});
 	};
-	getGames(QueryString.token);
+	getGames(token);
 };
 	exampleSocket.onclose = function(event) {
     // Connection crapped out
@@ -124,13 +127,13 @@ history:
 function sendCommand(){
 	//$("button").click(function(){
 	var comm = $("#comm").val();
-	var strAuth = "token " + QueryString.token;
+
 
 //alert(comm);
 //alert(strAuth);
 	$.ajax('http://brdg.me/game/'+QueryString.id+'/command', {
 	headers: {
-    Authorization: strAuth
+    	Authorization: 'token '+token
   	},
   	method: 'POST',
 	data: {'command': comm},
@@ -147,11 +150,11 @@ function sendCommand(){
   	    });
 	};
     function getGames(token){
-        strAuth="token "+token
+
          $.ajax('http://brdg.me/game', {
 
         headers: {
-            Authorization: strAuth
+    	Authorization: 'token '+token
         },
 
         success: function (data) {
@@ -164,24 +167,23 @@ function sendCommand(){
 
             var text = "";
 
-            for (i = 0; i < data.games.length; i = i + 1) {
+            for (i = 0; i < data.length; i = i + 1) {
+                          
+                text += "<a href=\"game.html?id=" + data[i].id +"\">" + data[i].identifier + "</a> with ";
 
-                                            
-                text += "<a href=\"game.html?id=" + data.games[i].id + "&mail=" + QueryString.mail + "&token=" +  token +"\">" + data.games[i].identifier + "</a> with ";
-
-                for (n = 0; n < data.games[i].playerList.length; n = n + 1){
-                    if (n==(data.games[i].playerList.length-1)){
-                        text+= data.games[i].playerList[n];
+                for (n = 0; n < data[i].playerList.length; n = n + 1){
+                    if (n==(data[i].playerList.length-1)){
+                        text+= data[i].playerList[n];
                     }
                     else
                     {
-                       text+= data.games[i].playerList[n]+" and "; 
+                       text+= data[i].playerList[n]+" and "; 
                     }
                     
 
                 }
 
-                text += "<br>"; 
+                text += "<br />";
 
             } 
             document.getElementById("gamelist").innerHTML = text; 
@@ -190,8 +192,63 @@ function sendCommand(){
 
     }
 
+    var titleInterval;
+var originalTitle;
+var blinked;
+function setTitle(toggle) {
+    if (toggle === undefined) {
+        // Check if we have any active games, set toggle to true if so
+        // We just set to true as an example her
+         strAuth="token "+token;
+         $.ajax('http://brdg.me/game', {
+         	headers: {
+            	Authorization: strAuth
+        	},
+
+        success: function (data) {
+
+        //alert("Request worked, open your JS console to see the data.");
+
+            console.log(data);
+
+        //alert(data.games[0].identifier);
+
+        toggle = true;
+    }
+    });
+	}
+    if (originalTitle === undefined) {
+        originalTitle = document.title;
+    }
+    if (titleInterval) {
+        clearInterval(titleInterval);
+    }
+    if (toggle) {
+        blinked = false;
+        titleInterval = setInterval(function() {
+            if (blinked) {
+                document.title = originalTitle;
+            } else {
+                document.title = "your turn";
+            }
+            blinked = !blinked;
+        }, 500);
+    } else {
+        document.title = originalTitle;
+    }
+}
+
+window.onblur = function() {
+    // If we left the page, check if we had active games and blink if so
+    setTitle();
+};
+window.onfocus = function() {
+    // When we enter the page just clear the blinking
+    setTitle(false);
+};
+
     </script>
 
-	
+</div>	
 </body>
 </html>

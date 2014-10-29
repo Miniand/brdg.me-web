@@ -15,9 +15,9 @@
 <body>
 
 
-
-   
+<div id="formContainer">  
 <form onsubmit="authFormSubmit();return false;">
+
     <div>
         <label>Email: <input id="email" /></label>
     </div>
@@ -28,6 +28,7 @@
         <input type="submit" value="Log in" />
     </div>
 </form>
+</div>
 <table>
 <tr>
 <td>
@@ -37,10 +38,15 @@ Your turn:<br />
     $(window).load(function() {
         var token = localStorage.getItem("token");
         if (token != null){
-            $('#gamedata').html(getGames(token, "my_turn"));
-            $('#allgamedata').html(getGames(token, "active"));
+            getGames(token, "my_turn", function(text) {
+                $('#gamedata').html(text);
+            });
+            getGames(token, "active", function(text) {
+                $('#allgamedata').html(text);
+            });
             //$('#gamedata').html("test1");
-            //$('#allgamedata').html("test2");          
+            //$('#allgamedata').html("test2"); 
+            $('#formContainer').hide();
         }
     });
 
@@ -110,7 +116,7 @@ Your turn:<br />
             for (i = 0; i < data.length; i = i + 1) {
 
                                             
-                text += "<a href=\"game.html?id=" + data[i].id + "&mail=" + $('#email').val().trim() + "&token=" +  token +"\">" + data[i].identifier + "</a> with ";
+                text += "<a href=\"game.html?id=" + data[i].id +"\">" + data[i].identifier + "</a> with ";
 
                 for (n = 0; n < data[i].playerList.length; n = n + 1){
                     if (n==(data[i].playerList.length-1)){
