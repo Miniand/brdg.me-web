@@ -1,0 +1,96 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
+<style>
+pre {
+    font-size: 13px;
+    line-height: 17px;
+    font-family: monospace, Segoe UI Symbol;
+    white-space: pre-wrap;
+}
+#historydata{
+    max-height:700px;
+    overflow:auto;
+}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <meta charset="utf-8" />
+    <title>brdg.me web client</title>
+</head>
+<body>
+<div class="pure-menu pure-menu-open pure-menu-horizontal">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="game.html">Games</a></li>
+        <li><a href="#">Start new game</a></li>
+        <li class="pure-menu-selected"><a href="poke.html">Poke all</a></li>
+    </ul>
+</div>
+poking everyone you've ever known and loved...
+
+    <script>
+    var token = localStorage.getItem("token");
+    $(window).load(function() {
+        //var token = localStorage.getItem("token");
+        if (token == null){
+            window.location.replace("http://baconheist.com/brdgme");
+        }
+        var comm = "poke"
+
+        $.ajax('http://brdg.me/game', {
+
+        headers: {
+        Authorization: 'token '+token
+        },
+data:{'gameState': "active"},
+        success: function (data) {
+
+        //alert("Request worked, open your JS console to see the data.");
+
+            console.log(data);
+
+        //alert(data.games[0].identifier);
+
+
+            for (i = 0; i < data.length; i = i + 1) {
+                          
+                
+console.log(data[i].id);
+                $.ajax('http://brdg.me/game/'+data[i].id+'/command', {
+                headers: {
+                    Authorization: 'token '+token
+                },
+                method: 'POST',
+                data: {'command': comm},
+                success: function(data1) { 
+                        console.log("poked");
+
+                        
+                        //alert('Successfully posted. Click OK to refresh');
+                        //location.reload();  
+                   } 
+                });
+            }
+        
+
+
+        }
+    
+    });
+
+
+});
+
+
+//alert(comm);
+//alert(strAuth);
+   
+   
+
+    </script>
+
+</div>  
+</body>
+</html>
