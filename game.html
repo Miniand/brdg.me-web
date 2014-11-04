@@ -38,6 +38,9 @@ pre {
 
     <script>
     var token = localStorage.getItem("token");
+	// activeGames is set to true when you have active games, controls tab
+	// flashing.
+	var activeGames = false;
     $(window).load(function() {
         //var token = localStorage.getItem("token");
         if (token == null){
@@ -179,8 +182,10 @@ function sendCommand(){
         //alert(data.games[0].identifier);
 
             var text = "<ul>";
+			activeGames = false;
 
             for (i = 0; i < data.length; i = i + 1) {
+				activeGames = true;
                           
                 text += "<li><a href=\"game.html?id=" + data[i].id +"\">" + data[i].identifier + "</a> with ";
 
@@ -203,43 +208,23 @@ function sendCommand(){
                 text += "</ul>";
 
             document.getElementById("gamelist").innerHTML = text; 
+			setTitle();
         } 
     });
 
     }
 
-    var titleInterval;
+var titleInterval;
 var originalTitle;
 var blinked;
-function setTitle(toggle) {
-    if (toggle === undefined) {
-        // Check if we have any active games, set toggle to true if so
-        // We just set to true as an example her
-         strAuth="token "+token;
-         $.ajax('http://brdg.me/game', {
-         	headers: {
-            	Authorization: strAuth
-        	},
-
-        success: function (data) {
-
-        //alert("Request worked, open your JS console to see the data.");
-
-            console.log(data);
-
-        //alert(data.games[0].identifier);
-
-        toggle = true;
-    }
-    });
-	}
+function setTitle() {
     if (originalTitle === undefined) {
         originalTitle = document.title;
     }
     if (titleInterval) {
         clearInterval(titleInterval);
     }
-    if (toggle) {
+    if (!document.hasFocus() && activeGames) {
         blinked = false;
         titleInterval = setInterval(function() {
             if (blinked) {
@@ -253,15 +238,8 @@ function setTitle(toggle) {
         document.title = originalTitle;
     }
 }
-
-window.onblur = function() {
-    // If we left the page, check if we had active games and blink if so
-    setTitle();
-};
-window.onfocus = function() {
-    // When we enter the page just clear the blinking
-    setTitle(false);
-};
+window.onblur = setTitle;
+window.onfocus = setTitle;
 
     </script>
 
