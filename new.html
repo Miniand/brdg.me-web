@@ -23,25 +23,16 @@ pre {
 <div class="pure-menu pure-menu-open pure-menu-horizontal">
     <ul>
         <li><a href="index.html">Home</a></li>
-        <li class="pure-menu-selected"><a href="game.html">Games</a></li>
-        <li><a href="#">Start new game</a></li>
+        <li><a href="game.html">Games</a></li>
+        <li class="pure-menu-selected"><a href="new.html">Start new game</a></li>
         <li><a href="poke.html">Poke all</a></li>
     </ul>
 </div>
 <div id="newform"></div>
 
-Start a new game:
-http://brdg.me/game_type
 
-obj = JSON.parse(json);
 
-alert(obj.count);
-
-I believe it was a POST to /game with:
-type: acquire
-opponents[]: baconheist@gmail.com
-opponents[]: ilovenetworks@gmail.com
-
+seperate email addresses of opponents with a comma.
     <script>
     var token = localStorage.getItem("token");
     $(window).load(function() {
@@ -54,25 +45,21 @@ opponents[]: ilovenetworks@gmail.com
             success: function(data) { 
                 console.log("posted");
                 console.log(data); 
-                var text="<form><select name=\"game\" id=\"game\">";
+                var text="<form onsubmit=\"sendCommand()\;return false\;\"><select name=\"game\" id=\"game\">";
 
 
                 for (i = 0; i < data.length; i = i + 1){
-                    text+= "<option value=" + data[i].identifier + ">" + data[i].name + "</option>";
+                    text+= "<option value=" + data[i].identifier + ">" + data[i].identifier + "</option>";
                     
                 }
-                 text+="</select>";
-                                 document.getElementById("newform").innerHTML = text;
+                text+="</select><br />emails: <input type=\"email\" id=\"email\" multiple=\"multiple\"><br /><input type=\"Submit\">";
+
+                document.getElementById("newform").innerHTML = text;
                              } 
-                         });
+        });
                  
-                 
-
-
-
-
-
-    });
+           
+     });
 
 		//alert (QueryString.id);				  
 		//var strAuth = "token "+QueryString.mail;
@@ -80,69 +67,31 @@ opponents[]: ilovenetworks@gmail.com
 
     function sendCommand(){
 	//$("button").click(function(){
-	var comm = $("#comm").val();
+	var type = $("#game").val();
+    var opp = $("#email").val().split(",")
+console.log(type);
+
+console.log(opp[0]);
+console.log(opp[1]);
+
 
 
 //alert(comm);
 //alert(strAuth);
-	$.ajax('http://brdg.me/game/', {
+	$.ajax('http://brdg.me/game', {
 	headers: {
     	Authorization: 'token '+token
   	},
   	method: 'POST',
-	data: {'command': comm},
+	data: {'identifier': type, 'opponents[]':opp},
 	success: function(data) { 
-			console.log("posted");
-			console.log(data); 
+            console.log("success:")
+            console.log(data); 
        } 
-  	    });
+  	});
 	};
 
-    function getGames(token){
 
-         $.ajax('http://brdg.me/game', {
-
-        headers: {
-    	Authorization: 'token '+token
-        },
-
-        success: function (data) {
-
-        //alert("Request worked, open your JS console to see the data.");
-
-            console.log(data);
-
-        //alert(data.games[0].identifier);
-
-            var text = "<ul>";
-
-            for (i = 0; i < data.length; i = i + 1) {
-                          
-                text += "<li><a href=\"game.html?id=" + data[i].id +"\">" + data[i].identifier + "</a> with ";
-
-                for (n = 0; n < data[i].playerList.length; n = n + 1){
-                    if (n==(data[i].playerList.length-1)){
-                        text+= data[i].playerList[n];
-                        text += "</li>";
-                    }
-                    else
-                    {
-                       text+= data[i].playerList[n]+" and "; 
-                    }
-                    
-                }
-
-
-
-            } 
-
-                text += "</ul>";
-
-            document.getElementById("gamelist").innerHTML = text; 
-        } 
-    });
-
-    }
 
    
 

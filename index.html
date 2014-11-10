@@ -1,6 +1,8 @@
 <!DOCTYPE html> 
 <html lang="en">
 <head>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
 <style>
  td {
    border: 1px solid black;
@@ -13,7 +15,14 @@
     <title>brdg.me web client</title>
 </head>
 <body>
-
+<div class="pure-menu pure-menu-open pure-menu-horizontal">
+    <ul>
+        <li class="pure-menu-selected"><a href="index.html">Home</a></li>
+        <li><a href="game.html">Games</a></li>
+        <li><a href="new.html">Start new game</a></li>
+        <li><a href="poke.html">Poke all</a></li>
+    </ul>
+</div>
 
 <div id="formContainer">  
 <form onsubmit="authFormSubmit();return false;">
