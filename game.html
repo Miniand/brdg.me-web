@@ -88,7 +88,7 @@ pre {
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
+					var text="<pre>Active Player: " + data.whoseTurn[0] + "<br />" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
 					document.getElementById("historydata").innerHTML = history;	
@@ -138,7 +138,8 @@ pre {
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
+
+					var text="<pre>Active Player: " + data.whoseTurn[0] + "<br />" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
 					document.getElementById("historydata").innerHTML = history;	
