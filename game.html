@@ -3,19 +3,27 @@
 <head>
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+
 <style>
 pre {
 	font-size: 13px;
 	line-height: 17px;
-	font-family: monospace, Segoe UI Symbol;
+	font-family: Courier New, monospace, Segoe UI Symbol;
 	white-space: pre-wrap;
 }
 #historydata{
 	max-height:700px;
     overflow:auto;
 }
+.toast-message { 
+	font-weight: bold; 
+}
 </style>
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <meta charset="utf-8" />
     <title>brdg.me web client</title>
 </head>
@@ -72,6 +80,9 @@ pre {
 				headers: {
 					Authorization: 'token '+token
 				},
+				statusCode: {
+        			401: handle401()
+    			},
 				success: function(data) {
 					//alert("Request worked, open your JS console to see the data.");
 					console.log(data);
@@ -86,6 +97,7 @@ pre {
 					$('#comm').focus();	
 
 				}
+				
 			});
 			getGames(token);
 
@@ -101,8 +113,7 @@ pre {
 	};
 	exampleSocket.onmessage = function(event) {
     // We were sent a game update
-    console.log("WebSocket event");
-    console.log(JSON.parse(event.data));
+
     obj = JSON.parse(event.data);
     if(obj.gameId==QueryString.id)
     {
@@ -110,10 +121,17 @@ pre {
 		//document.getElementById("gamedata").innerHTML += "YOUR TURN! (please refresh) ";
 		console.log("WebSocket event - this game");
     	console.log(JSON.parse(event.data));
+    	if (obj.text != null){
+    		    	toastr.info(obj.textHtml);
+    		    };
+
     	$.ajax('http://brdg.me/game/'+QueryString.id, {
 				headers: {
 					Authorization: 'token '+token
 				},
+				statusCode: {
+        			401: handle401()
+    			},
 				success: function(data) {
 					console.log("ajax success after websocket event");
 					//alert("Request worked, open your JS console to see the data.");
@@ -130,6 +148,15 @@ pre {
 
 				}
 			});
+	}
+	else
+	{
+		    console.log("WebSocket event - other game");
+    		console.log(JSON.parse(event.data));
+    		if (obj.msgType == "poke"){
+    		    	toastr.warning(obj.textHtml, 'poke!', {extendedTimeOut: 0, timeOut: 0 });
+
+    		    };
 	};
 	getGames(token);
 };
@@ -150,6 +177,9 @@ function sendCommand(){
 	headers: {
     	Authorization: 'token '+token
   	},
+  	statusCode: {
+       	401: handle401()
+    },
   	method: 'POST',
 	data: {'command': comm},
 	success: function(data) { 
@@ -165,6 +195,7 @@ function sendCommand(){
        } 
   	    });
 	};
+
     function getGames(token){
 
          $.ajax('http://brdg.me/game', {
@@ -172,7 +203,9 @@ function sendCommand(){
         headers: {
     	Authorization: 'token '+token
         },
-
+				statusCode: {
+        			401: handle401()
+    			},
         success: function (data) {
 
         //alert("Request worked, open your JS console to see the data.");
@@ -238,6 +271,11 @@ function setTitle() {
         document.title = originalTitle;
     }
 }
+function handle401(){
+	alert("Your session has expired, please log in");
+	//localStorage.clear();
+	//window.location.replace("http://baconheist.com/brdgme");
+};
 window.onblur = setTitle;
 window.onfocus = setTitle;
 
