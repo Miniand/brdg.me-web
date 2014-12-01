@@ -81,7 +81,7 @@ pre {
 					Authorization: 'token '+token
 				},
 				statusCode: {
-        			401: handle401()
+        			401: handle401
     			},
 				success: function(data) {
 					//alert("Request worked, open your JS console to see the data.");
@@ -130,7 +130,7 @@ pre {
 					Authorization: 'token '+token
 				},
 				statusCode: {
-        			401: handle401()
+        			401: handle401
     			},
 				success: function(data) {
 					console.log("ajax success after websocket event");
@@ -178,7 +178,7 @@ function sendCommand(){
     	Authorization: 'token '+token
   	},
   	statusCode: {
-       	401: handle401()
+       	401: handle401
     },
   	method: 'POST',
 	data: {'command': comm},
@@ -204,7 +204,7 @@ function sendCommand(){
     	Authorization: 'token '+token
         },
 				statusCode: {
-        			401: handle401()
+        			401: handle401
     			},
         success: function (data) {
 
@@ -273,8 +273,8 @@ function setTitle() {
 }
 function handle401(){
 	alert("Your session has expired, please log in");
-	//localStorage.clear();
-	//window.location.replace("http://baconheist.com/brdgme");
+	localStorage.clear();
+	window.location.replace("http://baconheist.com/brdgme");
 };
 window.onblur = setTitle;
 window.onfocus = setTitle;
