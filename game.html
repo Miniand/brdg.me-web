@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 pre {
@@ -88,7 +88,16 @@ pre {
 					console.log(data);
 					//alert(data.games[0].identifier);
 					//document.getElementById("gamedata").innerHTML=text;
-					var text="<pre>Active Player: " + data.whoseTurn[0] + "<br />" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
+					var text="<pre>";
+					if (data.whoseTurn != null)
+					{
+					for (i=0; data.whoseTurn.length > i; i++)
+					{	
+						text+="Active Player: " + data.whoseTurn[i] + "<br />";
+					}
+					}
+
+					text+="<pre>"+ data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
 					var history="<pre>" + data.log + "</pre><br />";
 					document.getElementById("historydata").innerHTML = history;	
@@ -239,9 +248,53 @@ function sendCommand(){
 
             } 
 
-                text += "</ul>";
+                text += "</ul><br />";
+                text += "<strong>Recently Ended:</strong>"
+                $.ajax('http://brdg.me/game/summary', {
 
-            document.getElementById("gamelist").innerHTML = text; 
+		        headers: {
+		    	Authorization: 'token '+token
+		        },
+						statusCode: {
+		        			401: handle401
+		    			},
+		        success: function (data) {
+
+		        //alert("Request worked, open your JS console to see the data.");
+
+		            console.log(data);
+
+		        //alert(data.games[0].identifier);
+
+		            text += "<ul>";
+					
+		            for (i = 0; i < data.recentlyFinished.length; i = i + 1) {
+						console.log("for")
+		                          
+		                text += "<li><a href=\"game.html?id=" + data.recentlyFinished[i].id +"\">" + data.recentlyFinished[i].identifier + "</a> with ";
+console.log(text);
+		                for (n = 0; n < data.recentlyFinished[i].playerList.length; n = n + 1){
+		                    if (n==(data.recentlyFinished[i].playerList.length-1)){
+		                        text+= data.recentlyFinished[i].playerList[n];
+		                        text += "</li>";
+		                    }
+		                    else
+		                    {
+		                       text+= data.recentlyFinished[i].playerList[n]+" and "; 
+		                    }
+		                    
+		                }
+
+
+
+		            } 
+ document.getElementById("gamelist").innerHTML = text; 
+		        } 
+		                   
+		    	});
+
+
+
 			setTitle();
         } 
     });
