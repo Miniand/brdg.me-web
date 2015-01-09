@@ -3,7 +3,7 @@
 <head>
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
  td {
    border: 1px solid black;
@@ -39,20 +39,19 @@
     </div>
 </form>
 </div>
-<table>
-<tr>
-<td>
-Your turn:<br />	
-	<div id="gamedata"></div>
+<div class="pure-g">
+    <div class="pure-u-1" id="gamedata"></div>
+
+
      <script>
     $(window).load(function() {
         var token = localStorage.getItem("token");
         if (token != null){
             getGames(token, "my_turn", function(text) {
-                $('#gamedata').html(text);
+                $('#gamedata').html("your turn: <br>"+text);
             });
             getGames(token, "active", function(text) {
-                $('#allgamedata').html(text);
+                $('#allgamedata').html("other's turns: <br>"+text);
             });
             //$('#gamedata').html("test1");
             //$('#allgamedata').html("test2"); 
@@ -112,6 +111,9 @@ Your turn:<br />
         headers: {
             Authorization: strAuth,
         },
+        statusCode: {
+            401: handle401
+        },
         data: {'gameState': state},
         success: function (data) {
 
@@ -150,17 +152,17 @@ Your turn:<br />
     });
 
     }
-
+function handle401(){
+    alert("Your session has expired, please log in");
+    localStorage.clear();
+    window.location.replace("http://baconheist.com/brdgme");
+};
     </script>
-</td></tr>
-<tr>
-<td>
-All Active:<br />
-<div id="allgamedata"></div>
 
-</td>
-</tr>
-</table>
+<div class="pure-u-1" id="allgamedata"></div>
+
+</div>
+
 
 
 </body>
