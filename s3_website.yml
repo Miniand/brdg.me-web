@@ -1,11 +1,11 @@
 s3_id: AKIAJLPLUI3TYMLUU6IA
 s3_secret: Pij4kkRNYX+3A82m031GtE+5dpkcfuEFJRUQs4I6
-s3_bucket: <%= ENV['BUCKET'] || 'brdg.me' %>
+s3_bucket: <%= ENV['S3_BUCKET'] || 'brdg.me' %>
 
 # Below are examples of all the available configurations.
 # See README for more detailed info on each of them.
 
-site: .
+site: <%= ENV['SITE'] || '.' %>
 
 # max_age:
 #   "assets/*": 6000
