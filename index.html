@@ -44,6 +44,7 @@
 
 
      <script>
+	var server = 'brdg.me';
     $(window).load(function() {
         var token = localStorage.getItem("token");
         if (token != null){
@@ -66,7 +67,7 @@
         if (email === '') {
             alert('Please enter an email address');
         } else if (confirmation === '') {
-            $.ajax('http://brdg.me/auth/request', {
+            $.ajax('http://'+server+'/auth/request', {
                 type: 'POST',
                 data: {
                     email: email
@@ -80,7 +81,7 @@
                 }
             });
         } else {
-            $.ajax('http://brdg.me/auth/confirm', {
+            $.ajax('http://'+server+'/auth/confirm', {
                 type: 'POST',
                 data: {
                     email: email,
@@ -106,7 +107,7 @@
     }
     function getGames(token, state, cb){
         strAuth="token "+token
-         $.ajax('http://brdg.me/game', {
+         $.ajax('http://'+server+'/game', {
 
         headers: {
             Authorization: strAuth,
@@ -155,7 +156,7 @@
 function handle401(){
     alert("Your session has expired, please log in");
     localStorage.clear();
-    window.location.replace("http://baconheist.com/brdgme");
+    window.location.replace("/");
 };
     </script>
 

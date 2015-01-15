@@ -34,13 +34,14 @@ pre {
 
 seperate email addresses of opponents with a comma.
     <script>
+	var server = 'brdg.me';
     var token = localStorage.getItem("token");
     $(window).load(function() {
         //var token = localStorage.getItem("token");
         if (token == null){
-			window.location.replace("http://baconheist.com/brdgme");
+			window.location.replace("/");
         }
-        $.ajax('http://brdg.me/game_type', {
+        $.ajax('http://'+server+'/game_type', {
             method: 'GET',
             success: function(data) { 
                 console.log("posted");
@@ -78,7 +79,7 @@ console.log(opp[1]);
 
 //alert(comm);
 //alert(strAuth);
-	$.ajax('http://brdg.me/game', {
+	$.ajax('http://'+server+'/game', {
 	headers: {
     	Authorization: 'token '+token
   	},

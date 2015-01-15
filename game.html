@@ -45,6 +45,7 @@ pre {
     </div></div>
 
     <script>
+	var server = "brdg.me";
     var token = localStorage.getItem("token");
 	// activeGames is set to true when you have active games, controls tab
 	// flashing.
@@ -52,7 +53,7 @@ pre {
     $(window).load(function() {
         //var token = localStorage.getItem("token");
         if (token == null){
-			window.location.replace("http://baconheist.com/brdgme");
+			window.location.replace("/");
         }
 
     });
@@ -74,9 +75,10 @@ pre {
 			} 
 		return query_string;
 		} ();
+		var user = QueryString.mail;
 		//alert (QueryString.id);				  
 		//var strAuth = "token "+QueryString.mail;
-		$.ajax('http://brdg.me/game/'+QueryString.id, {
+		$.ajax('http://'+server+'/game/'+QueryString.id, {
 				headers: {
 					Authorization: 'token '+token
 				},
@@ -110,8 +112,6 @@ pre {
 			});
 			getGames(token);
 
-	var server = "brdg.me";
-	var user = QueryString.mail;
 	var exampleSocket = new WebSocket("ws://"+server+"/ws");
 	exampleSocket.onopen = function(event) {
     // Authenticate
@@ -134,7 +134,7 @@ pre {
     		    	toastr.info(obj.textHtml);
     		    };
 
-    	$.ajax('http://brdg.me/game/'+QueryString.id, {
+    	$.ajax('http://'+server+'/game/'+QueryString.id, {
 				headers: {
 					Authorization: 'token '+token
 				},
@@ -183,7 +183,7 @@ function sendCommand(){
 
 //alert(comm);
 //alert(strAuth);
-	$.ajax('http://brdg.me/game/'+QueryString.id+'/command', {
+	$.ajax('http://'+server+'/game/'+QueryString.id+'/command', {
 	headers: {
     	Authorization: 'token '+token
   	},
@@ -208,7 +208,7 @@ function sendCommand(){
 
     function getGames(token){
 
-         $.ajax('http://brdg.me/game', {
+         $.ajax('http://'+server+'/game', {
 
         headers: {
     	Authorization: 'token '+token
@@ -250,7 +250,7 @@ function sendCommand(){
 
                 text += "</ul><br />";
                 text += "<strong>Recently Ended:</strong>"
-                $.ajax('http://brdg.me/game/summary', {
+                $.ajax('http://'+server+'/game/summary', {
 
 		        headers: {
 		    	Authorization: 'token '+token
@@ -328,7 +328,7 @@ function setTitle() {
 function handle401(){
 	alert("Your session has expired, please log in");
 	localStorage.clear();
-	window.location.replace("http://baconheist.com/brdgme");
+	window.location.replace("/");
 };
 window.onblur = setTitle;
 window.onfocus = setTitle;

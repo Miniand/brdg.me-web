@@ -31,15 +31,16 @@ pre {
 poking everyone you've ever known and loved...
 
     <script>
+	var server = 'brdg.me';
     var token = localStorage.getItem("token");
     $(window).load(function() {
         //var token = localStorage.getItem("token");
         if (token == null){
-            window.location.replace("http://baconheist.com/brdgme");
+            window.location.replace("/");
         }
         var comm = "poke"
 
-        $.ajax('http://brdg.me/game', {
+        $.ajax('http://'+server+'/game', {
 
         headers: {
         Authorization: 'token '+token
@@ -58,7 +59,7 @@ data:{'gameState': "active"},
                           
                 
 console.log(data[i].id);
-                $.ajax('http://brdg.me/game/'+data[i].id+'/command', {
+                $.ajax('http://'+server+'/game/'+data[i].id+'/command', {
                 headers: {
                     Authorization: 'token '+token
                 },
