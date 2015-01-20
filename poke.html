@@ -41,7 +41,7 @@ poking everyone you've ever known and loved...
         }
         var comm = "poke"
 
-        $.ajax('http://'+server+'/game', {
+        $.ajax('https://'+server+'/game', {
 
         headers: {
         Authorization: 'token '+token
@@ -60,7 +60,7 @@ data:{'gameState': "active"},
                           
                 
 console.log(data[i].id);
-                $.ajax('http://'+server+'/game/'+data[i].id+'/command', {
+                $.ajax('https://'+server+'/game/'+data[i].id+'/command', {
                 headers: {
                     Authorization: 'token '+token
                 },

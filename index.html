@@ -68,7 +68,7 @@
         if (email === '') {
             alert('Please enter an email address');
         } else if (confirmation === '') {
-            $.ajax('http://'+server+'/auth/request', {
+            $.ajax('https://'+server+'/auth/request', {
                 type: 'POST',
                 data: {
                     email: email
@@ -82,7 +82,7 @@
                 }
             });
         } else {
-            $.ajax('http://'+server+'/auth/confirm', {
+            $.ajax('https://'+server+'/auth/confirm', {
                 type: 'POST',
                 data: {
                     email: email,
@@ -108,7 +108,7 @@
     }
     function getGames(token, state, cb){
         strAuth="token "+token
-         $.ajax('http://'+server+'/game', {
+         $.ajax('https://'+server+'/game', {
 
         headers: {
             Authorization: strAuth,

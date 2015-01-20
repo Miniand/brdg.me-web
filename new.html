@@ -42,7 +42,7 @@ seperate email addresses of opponents with a comma.
         if (token == null){
 			window.location.replace("/");
         }
-        $.ajax('http://'+server+'/game_type', {
+        $.ajax('https://'+server+'/game_type', {
             method: 'GET',
             success: function(data) { 
                 console.log("posted");
@@ -80,7 +80,7 @@ console.log(opp[1]);
 
 //alert(comm);
 //alert(strAuth);
-	$.ajax('http://'+server+'/game', {
+	$.ajax('https://'+server+'/game', {
 	headers: {
     	Authorization: 'token '+token
   	},
