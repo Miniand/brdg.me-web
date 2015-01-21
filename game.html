@@ -78,13 +78,18 @@ function updateHistoryData(data, element) {
 	}
 	var el = orig.clone().empty();
 	var table = $('<table></table>');
+	var lastTime = null;
 	$.each(data, function(key, val) {
 		var row = $('<tr></tr>');
 		var timeSpan = $('<td></td>');
 		var m = moment(val.time);
 		var now = moment();
 		if (m.isAfter(now)) m = now;
-		timeSpan.text(m.fromNow());
+		var timeText = m.fromNow();
+		if (timeText != lastTime) {
+			timeSpan.text(timeText);
+			lastTime = timeText;
+		}
 		row.append(timeSpan);
 		var textSpan = $('<td></td>');
 		textSpan.html(val.text);
