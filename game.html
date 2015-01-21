@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-pre {
+pre, #historydata {
 	font-size: 13px;
 	line-height: 17px;
 	font-family: DejaVu Sans Mono, monospace, Segoe UI Symbol;
@@ -19,6 +19,13 @@ pre {
 	max-height:700px;
     overflow:auto;
 }
+#historydata>div>span:first-child {
+	display: inline-block;
+	color: gray;
+	text-align: right;
+	margin-right: 2em;
+	min-width: 11em;
+}
 .toast-message { 
 	font-weight: bold; 
 }
@@ -26,6 +33,7 @@ pre {
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <meta charset="utf-8" />
     <title>brdg.me web client</title>
 </head>
@@ -59,6 +67,32 @@ pre {
         }
 
     });
+
+function updateHistoryData(data, element) {
+	var orig = $(element);
+	if (orig.data('timeout')) {
+		clearTimeout(orig.data('timeout'));
+	}
+	var el = orig.clone().empty();
+	$.each(data, function(key, val) {
+		var row = $('<div></div>');
+		var timeSpan = $('<span></span>');
+		var m = moment(val.time);
+		var now = moment();
+		if (m.isAfter(now)) m = now;
+		timeSpan.text(m.fromNow());
+		row.append(timeSpan);
+		var textSpan = $('<span></span>');
+		textSpan.html(val.text);
+		row.append(textSpan);
+		el.append(row);
+	});
+	el.data('timeout', setTimeout(function() {
+		updateHistoryData(data, el);
+	}, 30*1000));
+	orig.replaceWith(el);
+	el[0].scrollTop = el[0].scrollHeight;
+}
 
 		var QueryString = function () {
 			var query_string = {};
@@ -103,10 +137,7 @@ pre {
 
 					text+="<pre>"+ data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
-					var history="<pre>" + data.log + "</pre><br />";
-					document.getElementById("historydata").innerHTML = history;	
-					var objDiv = document.getElementById("historydata");
-					objDiv.scrollTop = objDiv.scrollHeight;	
+					updateHistoryData(data.log, $('#historydata'));
 					$('#comm').focus();	
 
 				}
@@ -154,10 +185,7 @@ pre {
 
 					var text="<pre>Active Player: " + data.whoseTurn[0] + "<br />" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
-					var history="<pre>" + data.log + "</pre><br />";
-					document.getElementById("historydata").innerHTML = history;	
-					var objDiv = document.getElementById("historydata");
-					objDiv.scrollTop = objDiv.scrollHeight;		
+					updateHistoryData(data.log, $('#historydata'));
 					$('#comm').focus();	
 
 				}
@@ -201,8 +229,7 @@ function sendCommand(){
 			console.log(data);
 			var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre>";
 			document.getElementById("gamedata").innerHTML = text;
-			var history="<pre>" + data.log + "</pre><br />";
-			document.getElementById("historydata").innerHTML = history;
+			updateHistoryData(data.log, $('#historydata'));
 			$('#comm').val("");
 		    //alert('Successfully posted. Click OK to refresh');
             //location.reload();  
