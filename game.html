@@ -29,6 +29,9 @@ pre, #historydata {
 .toast-message { 
 	font-weight: bold; 
 }
+.game-list-players {
+	font-size: 0.8em;
+}
 </style>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -265,19 +268,17 @@ function sendCommand(){
             for (i = 0; i < data.length; i = i + 1) {
 				activeGames = true;
                           
-                text += "<li><a href=\"game.html?id=" + data[i].id +"\">" + data[i].identifier + "</a> with ";
+				text += "<li><a href=\"game.html?id=" + data[i].id +"\">" + data[i].name + "</a><div class=\"game-list-players\">with ";
 
-                for (n = 0; n < data[i].playerList.length; n = n + 1){
-                    if (n==(data[i].playerList.length-1)){
-                        text+= data[i].playerList[n];
-                        text += "</li>";
-                    }
-                    else
-                    {
-                       text+= data[i].playerList[n]+" and "; 
-                    }
-                    
+                for (var n = 0, l = data[i].playerList.length; n < l; n++){
+                    text+= data[i].playerList[n];
+					if (n == l-2) {
+						text += " and ";
+					} else if (n < l-2) {
+						text += ", ";
+					}
                 }
+				text += "</div></li>";
 
 
 
@@ -306,19 +307,17 @@ function sendCommand(){
 		            for (i = 0; i < data.recentlyFinished.length; i = i + 1) {
 						console.log("for")
 		                          
-		                text += "<li><a href=\"game.html?id=" + data.recentlyFinished[i].id +"\">" + data.recentlyFinished[i].identifier + "</a> with ";
-console.log(text);
-		                for (n = 0; n < data.recentlyFinished[i].playerList.length; n = n + 1){
-		                    if (n==(data.recentlyFinished[i].playerList.length-1)){
-		                        text+= data.recentlyFinished[i].playerList[n];
-		                        text += "</li>";
-		                    }
-		                    else
-		                    {
-		                       text+= data.recentlyFinished[i].playerList[n]+" and "; 
-		                    }
-		                    
-		                }
+						text += "<li><a href=\"game.html?id=" + data.recentlyFinished[i].id +"\">" + data.recentlyFinished[i].name + "</a><div class=\"game-list-players\">with ";
+
+						for (var n = 0, l = data.recentlyFinished[i].playerList.length; n < l; n++){
+							text+= data.recentlyFinished[i].playerList[n];
+							if (n == l-2) {
+								text += " and ";
+							} else if (n < l-2) {
+								text += ", ";
+							}
+						}
+						text += "</div></li>";
 
 
 
