@@ -125,7 +125,9 @@ pre {
 	exampleSocket.onmessage = function(event) {
     // We were sent a game update
 
-    obj = JSON.parse(event.data);
+	var data = JSON.parse(event.data);
+	if (data.type !== 'gameUpdate') return;
+    var obj = data.data;
     if(obj.gameId==QueryString.id)
     {
 		//location.reload();
