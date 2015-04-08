@@ -1,6 +1,7 @@
 <!DOCTYPE html> 
 <html lang="en">
 <head>
+<script src="sticky.js"></script>
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
@@ -26,6 +27,10 @@ pre, #historydata {
 	width: 11em;
 	vertical-align: top;
 }
+#command {
+	position: sticky;
+	top: 0px;
+}
 .toast-message { 
 	font-weight: bold; 
 }
@@ -50,7 +55,7 @@ pre, #historydata {
     </ul>
 </div>
 <div class="pure-g">
-	<div class="pure-u-1 pure-u-md-12-24"><div id="gamedata"></div><div id="command"><form onsubmit="sendCommand();return false;"> Command: <input type="text" name="comm" id="comm" autofocus><br><input type="Submit"></form></div></div>
+	<div class="pure-u-1 pure-u-md-12-24"><div id="command"><form onsubmit="sendCommand();return false;"> Command: <input type="text" name="comm" id="comm" autofocus><br><input type="Submit"></form></div><div id="gamedata"></div></div>
 
 	<div class="pure-u-1 pure-u-md-9-24" id="historydata"></div>
 
