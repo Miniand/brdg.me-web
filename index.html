@@ -50,10 +50,10 @@
         var token = localStorage.getItem("token");
         if (token != null){
             getGames(token, "my_turn", function(text) {
-                $('#gamedata').html("your turn: <br>"+text);
+                $('#gamedata').html("<strong>your turn:</strong> <br>"+text);
             });
             getGames(token, "active", function(text) {
-                $('#allgamedata').html("other's turns: <br>"+text);
+                $('#allgamedata').html("<br><strong>other's turns:</strong> <br>"+text);
             });
             //$('#gamedata').html("test1");
             //$('#allgamedata').html("test2"); 
@@ -152,8 +152,30 @@
 
         } 
     });
-
+    var exampleSocket = new WebSocket("wss://"+server+"/ws");
+    exampleSocket.onopen = function(event) {
+        // Authenticate
+        console.log('Connected, authenticating');
+        console.log(token);
+        
+        exampleSocket.send(JSON.stringify(token));
+    };
+    exampleSocket.onmessage = function(event) {
+        // We were sent a game update
+        console.log('We were sent a game update');
+        var data = JSON.parse(event.data);
+        console.log(JSON.parse(event.data));
+        var obj = data.data;
+        if (obj.msgType !== 'yourTurn') return;
+        console.log("your turn update");
+        console.log(JSON.parse(event.data));
+        location.reload();
     }
+    }
+
+
+
+
 function handle401(){
     alert("Your session has expired, please log in");
     localStorage.clear();
