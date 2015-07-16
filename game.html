@@ -80,7 +80,7 @@ pre, #historydata {
 
     });
 
-function updateHistoryData(data, element) {
+function updateHistoryData(data, element, lastReadTime) {
 	var orig = $(element);
 	if (orig.data('timeout')) {
 		clearTimeout(orig.data('timeout'));
@@ -102,6 +102,9 @@ function updateHistoryData(data, element) {
 		row.append(timeSpan);
 		var textSpan = $('<td></td>');
 		textSpan.html(val.text);
+		if (val.time < lastReadTime) {
+		    textSpan.css('opacity', 0.4);
+		}
 		row.append(textSpan);
 		table.append(row);
 	});
@@ -111,7 +114,7 @@ function updateHistoryData(data, element) {
 	el[0].scrollTop = el[0].scrollHeight;
 
 	el.data('timeout', setTimeout(function() {
-		updateHistoryData(data, el);
+		updateHistoryData(data, el, lastReadTime);
 	}, 30*1000));
 }
 
@@ -158,7 +161,7 @@ function updateHistoryData(data, element) {
 
 					text+="<pre>"+ data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
-					updateHistoryData(data.log, $('#historydata'));
+					updateHistoryData(data.log, $('#historydata'), data.lastReadTime);
 					$('#comm').focus();	
 
 				}
@@ -206,7 +209,7 @@ function updateHistoryData(data, element) {
 
 					var text="<pre>Active Player: " + data.whoseTurn[0] + "<br />" + data.game + "</pre><br /><pre>" + data.commands + "</pre><br />";
 					document.getElementById("gamedata").innerHTML = text;
-					updateHistoryData(data.log, $('#historydata'));
+					updateHistoryData(data.log, $('#historydata'), data.lastReadTime);
 					$('#comm').focus();	
 
 				}
@@ -250,7 +253,7 @@ function sendCommand(){
 			console.log(data);
 			var text="<pre>" + data.game + "</pre><br /><pre>" + data.commands + "</pre>";
 			document.getElementById("gamedata").innerHTML = text;
-			updateHistoryData(data.log, $('#historydata'));
+			updateHistoryData(data.log, $('#historydata'), data.lastReadTime);
 			$('#comm').val("");
 		    //alert('Successfully posted. Click OK to refresh');
             //location.reload();  
