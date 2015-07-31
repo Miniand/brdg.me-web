@@ -1,0 +1,16 @@
+#command form {
+    background-color: #1d1f21;
+}
+
+body {
+    background-color: #1d1f21;
+    color: white;
+}
+
+div.pure-menu.pure-menu-open {
+    background-color: #1d1f21;
+}
+
+.pure-menu .pure-menu-selected a {
+    color: white;
+}
