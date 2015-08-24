@@ -170,16 +170,42 @@ function updateHistoryData(data, element, lastReadTime) {
 			});
 			getGames(token);
 
-	var exampleSocket = new WebSocket("wss://"+server+"/ws");
-	exampleSocket.onopen = function(event) {
+var exampleSocket;
+function connectWS() {
+    exampleSocket = new WebSocket("wss://"+server+"/ws");
+    exampleSocket.onopen = wsOnOpen;
+    exampleSocket.onclose = wsOnClose;
+}
+function wsOnOpen() {
+
     // Authenticate
     console.log('Connected, authenticating');
     console.log(token);
     
     exampleSocket.send(JSON.stringify(token));
-	};
-	exampleSocket.onmessage = function(event) {
-    // We were sent a game update
+}
+function wsOnClose() {
+    // Try to connect again in a minute
+    setTimeout(connectWS, 60000);
+}
+// Make initial connection
+connectWS();
+
+
+
+
+
+//old
+	// var exampleSocket = new WebSocket("wss://"+server+"/ws");
+	// exampleSocket.onopen = function(event) {
+ //    // Authenticate
+ //    console.log('Connected, authenticating');
+ //    console.log(token);
+    
+ //    exampleSocket.send(JSON.stringify(token));
+	// };
+	 exampleSocket.onmessage = function(event) {
+ //    We were sent a game update
 
 	var data = JSON.parse(event.data);
 	if (data.type !== 'gameUpdate') return;
@@ -227,11 +253,11 @@ function updateHistoryData(data, element, lastReadTime) {
 	};
 	getGames(token);
 };
-	exampleSocket.onclose = function(event) {
-    // Connection crapped out
-    alert('The connection died, click OK to refresh');
-    //location.reload();
-};
+// 	exampleSocket.onclose = function(event) {
+//     // Connection crapped out
+//     alert('The connection died, click OK to refresh');
+//     //location.reload();
+// };
 
 function sendCommand(){
 	//$("button").click(function(){
