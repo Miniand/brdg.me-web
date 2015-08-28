@@ -350,9 +350,10 @@ function sendCommand(){
 								text += ", ";
 							}
 						}
-						text += "</div></li>";
-
-
+						for (var x = 0; x < data.recentlyFinished[i].winners.length; x++){
+							text += "<br>(winner: "+data.recentlyFinished[i].winners[x]+")";
+						}
+						text+="</div></li>";
 
 		            } 
  document.getElementById("gamelist").innerHTML = text; 
